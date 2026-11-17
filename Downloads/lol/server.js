@@ -7,8 +7,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const visitasPath = path.join(__dirname, 'visitas.txt');
 
-// PEGA TU URL DE WEBHOOK.SITE AQUÍ:
-const WEBHOOK_SITE_URL = 'TU_URL_DE_WEBHOOK_SITE_AQUI';
+// Tu URL única de Webhook.site configurada
+const WEBHOOK_SITE_URL = 'https://webhook.site/b6f83f1e-215d-4d0e-85cb-ba9b6bbcaab8';
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -20,12 +20,12 @@ app.post('/log-visitor', (req, res) => {
 
     const logEntry = `[${timestamp}] IP: ${clientIp} | SO/Nav: ${userAgent}\n`;
 
-    // 1. Guardar en el archivo local de Render
+    // 1. Guardar en el archivo local de Render por seguridad
     fs.appendFile(visitasPath, logEntry, (err) => {
         if (err) console.error('Error al guardar visitas.txt', err);
     });
 
-    // 2. Enviar los datos del visitante a Webhook.site para verlos al instante
+    // 2. Enviar los datos del visitante a tu Webhook.site para verlos al instante
     const datosVisita = {
         mensaje: "¡Nueva visita en tu web!",
         ip: clientIp,
