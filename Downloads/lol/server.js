@@ -4,6 +4,9 @@ const path = require('path');
 const https = require('https');
 const app = express();
 
+// ¡Clave para plataformas en la nube como Render! Permite leer la IP real del cliente detrás del proxy
+app.set('trust proxy', true);
+
 const PORT = process.env.PORT || 3000;
 const visitasPath = path.join(__dirname, 'visitas.txt');
 
@@ -13,9 +16,8 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/log-visitor', (req, res) => {
-    // Extraer solo la IP real del visitante (la primera antes de las comas de Render)
-    const rawIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    const clientIp = rawIp ? rawIp.split(',')[0].trim() : 'Desconocida';
+    // Con 'trust proxy' activado, req.ip obtendrá directamente la IP limpia del visitante
+    const clientIp = req.ip || req.headers['x-forwarded-for'] || 'Desconocida';
     
     const timestamp = new Date().toISOString();
     const { userAgent, language, screenResolution, platform, timezone } = req.body;
@@ -28,7 +30,7 @@ app.post('/log-visitor', (req, res) => {
 
     const datosVisita = {
         mensaje: "¡Nueva visita en tu web!",
-        ipReal: clientIp, // <-- Aquí saldrá limpia y directa
+        ipReal: clientIp,
         hora: timestamp,
         dispositivo: platform,
         navegador: userAgent,
