@@ -1,54 +1,73 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const https = require('https');
 const app = express();
 
 const PORT = process.env.PORT || 3000;
 const visitasPath = path.join(__dirname, 'visitas.txt');
 
-// Middleware para procesar JSON y servir archivos estáticos (tu página web normal)
+// PEGA TU URL DE WEBHOOK.SITE AQUÍ:
+const WEBHOOK_SITE_URL = 'TU_URL_DE_WEBHOOK_SITE_AQUI';
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Endpoint privado en segundo plano: Registra la IP y datos del visitante sin mostrárselos al público
 app.post('/log-visitor', (req, res) => {
     const clientIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     const timestamp = new Date().toISOString();
-
     const { userAgent, language, screenResolution, platform, timezone } = req.body;
 
-    const logEntry = `[${timestamp}]
-IP: ${clientIp}
-Navegador/OS: ${userAgent}
-Plataforma: ${platform}
-Idioma: ${language}
-Resolución: ${screenResolution}
-Zona horaria: ${timezone}
--------------------------\n`;
+    const logEntry = `[${timestamp}] IP: ${clientIp} | SO/Nav: ${userAgent}\n`;
 
-    // Guarda los datos en el archivo de texto en el servidor
+    // 1. Guardar en el archivo local de Render
     fs.appendFile(visitasPath, logEntry, (err) => {
-        if (err) {
-            console.error('Error al guardar los datos en visitas.txt:', err);
-            return res.status(500).send({ status: 'error' });
-        }
+        if (err) console.error('Error al guardar visitas.txt', err);
     });
 
-    console.log(`[LOG] Nueva visita registrada desde IP: ${clientIp}`);
+    // 2. Enviar los datos del visitante a Webhook.site para verlos al instante
+    const datosVisita = {
+        mensaje: "¡Nueva visita en tu web!",
+        ip: clientIp,
+        hora: timestamp,
+        dispositivo: platform,
+        navegador: userAgent,
+        zonaHoraria: timezone
+    };
+
+    const urlObj = new URL(WEBHOOK_SITE_URL);
+    const data = JSON.stringify(datosVisita);
+
+    const options = {
+        hostname: urlObj.hostname,
+        path: urlObj.pathname + urlObj.search,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': data.length
+        }
+    };
+
+    const reqWebhook = https.request(options, (resWebhook) => {
+        // Petición enviada correctamente
+    });
+    
+    reqWebhook.on('error', (err) => {
+        console.error('Error al enviar datos a Webhook.site:', err);
+    });
+    
+    reqWebhook.write(data);
+    reqWebhook.end();
+
     res.status(200).send({ status: 'ok' });
 });
 
-// Ruta privada exclusiva para ti: Al entrar aquí verás las IPs y registros (el público no los ve)
 app.get('/ver-visitas', (req, res) => {
-    if (!fs.existsSync(visitasPath)) {
-        return res.send('Aún no hay visitas registradas.');
-    }
-    const logs = fs.readFileSync(visitasPath, 'utf8');
+    if (!fs.existsSync(visitasPath)) return res.send('Aún no hay visitas.');
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-    res.send(logs);
+    res.send(fs.readFileSync(visitasPath, 'utf8'));
 });
 
-// Iniciar servidor
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
