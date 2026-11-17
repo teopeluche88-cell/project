@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global News Network - Cobertura Mundial</title>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #e11d48;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #334155;
+            --border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 2.5rem 1rem;
+            text-align: center;
+            border-bottom: 4px solid var(--accent);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        /* BARRA DE ÚLTIMA HORA EN MOVIMIENTO */
+        .breaking-news {
+            background-color: #0f172a;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            padding: 0.6rem 1rem;
+            border-bottom: 2px solid var(--accent);
+            font-size: 0.9rem;
+        }
+
+        .breaking-tag {
+            background-color: var(--accent);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border-radius: 4px;
+            margin-right: 1rem;
+            text-transform: uppercase;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 2.5fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .news-card {
+            background: var(--card-bg);
+            padding: 1.8rem;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--primary);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .news-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+        }
+
+        .category {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            display: block;
+            letter-spacing: 0.5px;
+        }
+
+        .news-card h2 {
+            font-size: 1.4rem;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+
+        .date {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        .news-card p {
+            font-size: 0.95rem;
+            color: #475569;
+        }
+
+        .read-more {
+            display: inline-block;
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        aside {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sidebar-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            border-top: 3px solid var(--primary);
+        }
+
+        .sidebar-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 0.5rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ESTILOS DEL MINIJUEGO */
+        .game-box {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .game-box p {
+            font-size: 0.9rem;
+            color: #475569;
+        }
+
+        .game-input {
+            width: 100%;
+            padding: 0.6rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .game-input:focus {
+            border-color: var(--primary);
+        }
+
+        .game-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background 0.2s;
+        }
+
+        .game-btn:hover {
+            background-color: #1e293b;
+        }
+
+        #gameMessage {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        .sidebar-card ul {
+            list-style: none;
+        }
+
+        .sidebar-card ul li {
+            padding: 0.7rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+            color: #334155;
+        }
+
+        .sidebar-card ul li:last-child {
+            border-bottom: none;
+        }
+
+        /* MODAL DE INFORMACIÓN EXTENDIDA */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 1rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            max-width: 650px;
+            width: 100%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            animation: scaleUp 0.25s ease;
+        }
+
+        .modal-content h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.6rem;
+        }
+
+        .modal-date {
+            font-size: 0.8rem;
+            color: #64748b;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .modal-body {
+            font-size: 1rem;
+            color: #334155;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .close-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            float: right;
+            transition: background 0.2s;
+        }
+
+        .close-btn:hover {
+            background: #be123c;
+        }
+
+        @keyframes scaleUp {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: var(--primary);
+            color: white;
+            margin-top: 3rem;
+            font-size: 0.9rem;
+            border-top: 4px solid var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>GLOBAL NEWS NETWORK</h1>
+        <p>Corresponsales internacionales y análisis global en tiempo real</p>
+    </header>
+
+    <!-- BARRA DE ÚLTIMA HORA -->
+    <div class="breaking-news">
+        <span class="breaking-tag">Última Hora</span>
+        <span>🔴 Mercados internacionales registran alta actividad tras los recientes anuncios de los bancos centrales.</span>
+    </div>
+
+    <div class="container">
+        <!-- SECCIÓN PRINCIPAL DE NOTICIAS -->
+        <main>
+            <article class="news-card" 
+                data-title="Cumbre internacional aprueba fondo estratégico para redes eléctricas inteligentes" 
+                data-date="Hace 30 minutos • Ginebra" 
+                data-content="Ministros de energía de más de 50 países han ratificado un acuerdo multimillonario enfocado en la modernización y ciberseguridad de infraestructuras eléctricas interconectadas. La iniciativa busca prevenir apagones masivos y acelerar la integración de fuentes limpias a nivel continental.">
+                <span class="category">Geopolítica</span>
+                <h2>Cumbre internacional aprueba fondo estratégico para redes eléctricas inteligentes</h2>
+                <span class="date">Hace 30 minutos • Ginebra</span>
+                <p>Líderes globales pactan un marco de cooperación histórica para modernizar la infraestructura energética y garantizar estabilidad a gran escala.</p>
+                <span class="read-more">Leer artículo completo →</span>
+            </article>
+
+            <article class="news-card" 
+                data-title="Despliegan protocolos de cifrado post-cuántico en infraestructuras críticas" 
+                data-date="Hace 2 horas • Tecnología Global" 
+                data-content="Organismos internacionales de ciberseguridad comenzaron la implementación de algoritmos criptográficos avanzados resistentes al procesamiento cuántico, protegiendo así sistemas financieros y bases de datos gubernamentales frente a futuras amenazas digitales.">
+                <span class="category">Ciberseguridad</span>
+                <h2>Despliegan protocolos de cifrado post-cuántico en infraestructuras críticas</h2>
+                <span class="date">Hace 2 horas • Tecnología Global</span>
+                <p>Nuevas capas de defensa digital se integran en redes financieras y gubernamentales para anticiparse a los desafíos de la computación avanzada.</p>
+                <span class="read-more">Leer artículo completo →</span>
+            </article>
+
+            <article class="news-card" 
+                data-title="Los mercados financieros globales reaccionan ante las decisiones de los bancos centrales" 
+                data-date="Hace 4 horas • Economía" 
+                data-content="Las principales bolsas del mundo experimentan sesiones de alta volatilidad tras los comunicados oficiales sobre tipos de interés. Inversores institucionales redirigen capitales hacia tecnología avanzada y proyectos de desarrollo sostenible.">
+                <span class="category">Economía y Finanzas</span>
+                <h2>Los mercados financieros globales reaccionan ante las decisiones de los bancos centrales</h2>
+                <span class="date">Hace 4 horas • Economía</span>
+                <p>Analistas evalúan el impacto de las fluctuaciones bursátiles y la reasignación de capitales hacia sectores tecnológicos e infraestructura verde.</p>
+                <span class="read-more">Leer artículo completo →</span>
+            </article>
+        </main>
+
+        <!-- BARRA LATERAL -->
+        <aside>
+            <!-- RELOJ MUNDIAL -->
+            <div class="sidebar-card">
+                <h3>Hora Mundial</h3>
+                <div id="worldClock" style="font-size: 1.1rem; font-weight: bold; color: var(--primary); text-align: center; padding: 0.3rem;">
+                    Cargando hora...
+                </div>
+            </div>
+
+            <!-- MINIJUEGO -->
+            <div class="sidebar-card">
+                <h3>Minijuego: Adivina el Número</h3>
+                <div class="game-box">
+                    <p>Adivina un número secreto entre <strong>1 y 100</strong>:</p>
+                    <input type="number" id="userGuess" class="game-input" placeholder="Tu número..." min="1" max="100">
+                    <button id="guessBtn" class="game-btn">Probar suerte</button>
+                    <div id="gameMessage">¡Comienza a jugar!</div>
+                </div>
+            </div>
+
+            <div class="sidebar-card">
+                <h3>Secciones</h3>
+                <ul>
+                    <li>🌐 Geopolítica Mundial</li>
+                    <li>📊 Finanzas y Mercados</li>
+                    <li>💻 Ciberseguridad y Redes</li>
+                    <li>⚡ Energías Renovables</li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <!-- VENTANA MODAL -->
+    <div class="modal-overlay" id="newsModal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Título</h3>
+            <span class="modal-date" id="modalDate">Fecha</span>
+            <div class="modal-body" id="modalBody">Contenido...</div>
+            <button class="close-btn" id="closeModal">Cerrar</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 Global News Network. Todos los derechos reservados.</p>
+    </footer>
+
+    <!-- SCRIPT EXTERNO -->
+    <script src="app.js"></script>
+</body>
+</html>

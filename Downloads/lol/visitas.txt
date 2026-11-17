@@ -1,0 +1,16 @@
+[2026-11-17T01:52:58.924Z] 
+IP: ::1 
+Navegador/OS: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:160.0) Gecko/20100101 Firefox/160.0 
+Plataforma: Win32 
+Idioma: es-ES 
+Resolución: 1536x864 
+Zona horaria: America/Los_Angeles
+----------------------------------------
+[2026-11-17T02:41:39.934Z] 
+IP: ::1 
+Navegador/OS: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:160.0) Gecko/20100101 Firefox/160.0 
+Plataforma: Win32 
+Idioma: es-ES 
+Resolución: 1536x864 
+Zona horaria: America/Los_Angeles
+----------------------------------------
